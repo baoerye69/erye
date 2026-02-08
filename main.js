@@ -1,6 +1,6 @@
 /**
  * Haoran Wu's Website Main Logic
- * Updated: Better zoom levels & persistent button highlighting
+ * Final Tuning: Focused on Dushu Lake (Suzhou) & Clean UI
  */
 
 window.switchTab = function(tabId) {
@@ -42,12 +42,12 @@ window.switchTab = function(tabId) {
     }
 }
 
-// 调整后的城市配置
+// 修正后的地理位置配置
 const LOCATIONS = {
-    'all': { center: [41.8, -72.5], zoom: 7.5 },     // 稍微缩小，确保覆盖 NY 到 Boston
-    'boston': { center: [42.3601, -71.0589], zoom: 11 }, // 缩小到 11 倍，覆盖大波士顿地区
-    'liverpool': { center: [53.4084, -2.9916], zoom: 11 }, // 覆盖利物浦及周边
-    'suzhou': { center: [31.33, 120.65], zoom: 11.5 }    // 偏移中心到东部工业园区/骑行活跃区
+    'all': { center: [41.8, -72.5], zoom: 7.2 },
+    'boston': { center: [42.3601, -71.0589], zoom: 10 },    // 更宽阔的波士顿视野
+    'liverpool': { center: [53.4084, -2.9916], zoom: 10 }, // 更宽阔的利物浦视野
+    'suzhou': { center: [31.275, 120.735], zoom: 12.5 }    // 精准对准独墅湖高教区路线中心
 };
 
 window.map = null;
@@ -62,7 +62,7 @@ function initGPXMap() {
     }).setView(LOCATIONS.all.center, LOCATIONS.all.zoom);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO'
+        attribution: '&copy; OpenStreetMap'
     }).addTo(window.map);
 
     document.getElementById('map-loading').style.display = 'none';
@@ -86,7 +86,6 @@ function renderMyRoutes() {
     });
 }
 
-// 处理地区按钮的点击与选中框逻辑
 function setupRegionButtons() {
     const btnConfigs = [
         { id: 'region-all', key: 'all' },
@@ -103,18 +102,19 @@ function setupRegionButtons() {
                 const loc = LOCATIONS[config.key];
                 window.map.flyTo(loc.center, loc.zoom, { duration: 1.5 });
                 
-                // --- 选中框切换逻辑 ---
-                // 1. 清除所有按钮的选中样式（紫色背景 + 边框）
+                // 切换样式：仅保留背景深浅变化，彻底移除白框
                 btnConfigs.forEach(cfg => {
                     const b = document.getElementById(cfg.id);
                     if (b) {
-                        b.classList.remove('bg-purple-500/20', 'border-purple-500/30');
+                        b.classList.remove('bg-purple-500/30', 'text-white');
                         b.classList.add('bg-white/5', 'text-white/70');
+                        b.style.border = "none";
+                        b.style.outline = "none";
+                        b.style.boxShadow = "none";
                     }
                 });
 
-                // 2. 为当前点击的按钮添加选中样式
-                btn.classList.add('bg-purple-500/20', 'border-purple-500/30');
+                btn.classList.add('bg-purple-500/30', 'text-white');
                 btn.classList.remove('bg-white/5', 'text-white/70');
             };
         }
