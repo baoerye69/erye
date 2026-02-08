@@ -612,7 +612,8 @@ function zoomToRegion(regionName) {
             }
         } else {
             console.warn('Invalid GPX bounds, using default view');
-            map.setView([40.7128, -73.9352], 11, { animate: true });
+           
+            map.setView([42.3601, -71.0589], 12, { animate: true });
         }
     } else {
         // Specific region - find densest area
