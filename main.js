@@ -1,8 +1,3 @@
-/**
- * Haoran Wu's Website Main Logic
- * Final Tuning: Focused on Dushu Lake (Suzhou) & Clean UI
- */
-
 window.switchTab = function(tabId) {
     const sections = ['home-section', 'resume-section', 'cycling-section'];
     const buttons = ['btn-home', 'btn-resume', 'btn-cycling'];
@@ -12,10 +7,10 @@ window.switchTab = function(tabId) {
         if (el) {
             if (id === tabId + '-section') {
                 el.style.display = 'block';
-                el.classList.remove('hidden');
+                el.classList.remove('hidden-section');
             } else {
                 el.style.display = 'none';
-                el.classList.add('hidden');
+                el.classList.add('hidden-section');
             }
         }
     });
@@ -24,11 +19,11 @@ window.switchTab = function(tabId) {
         const btn = document.getElementById(id);
         if (btn) {
             if (id === 'btn-' + tabId) {
-                btn.classList.add('bg-white/10', 'border-white/5');
-                btn.classList.remove('text-white/60', 'border-transparent');
+                btn.classList.add('bg-white/20');
+                btn.classList.remove('text-white/70');
             } else {
-                btn.classList.remove('bg-white/10', 'border-white/5');
-                btn.classList.add('text-white/60', 'border-transparent');
+                btn.classList.remove('bg-white/20');
+                btn.classList.add('text-white/70');
             }
         }
     });
@@ -42,12 +37,11 @@ window.switchTab = function(tabId) {
     }
 }
 
-// 修正后的地理位置配置
 const LOCATIONS = {
     'all': { center: [41.8, -72.5], zoom: 7.2 },
-    'boston': { center: [42.3601, -71.0589], zoom: 10 },    // 更宽阔的波士顿视野
-    'liverpool': { center: [53.4084, -2.9916], zoom: 10 }, // 更宽阔的利物浦视野
-    'suzhou': { center: [31.275, 120.735], zoom: 12.5 }    // 精准对准独墅湖高教区路线中心
+    'boston': { center: [42.3601, -71.0589], zoom: 9.5 },
+    'liverpool': { center: [53.4084, -2.9916], zoom: 9.5 },
+    'suzhou': { center: [31.19899, 120.61026], zoom: 12.5 } // 精准定位到你要求的坐标
 };
 
 window.map = null;
@@ -58,31 +52,21 @@ function initGPXMap() {
 
     window.map = L.map('gpx-heatmap', {
         zoomControl: true,
-        attributionControl: true
+        attributionControl: false
     }).setView(LOCATIONS.all.center, LOCATIONS.all.zoom);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(window.map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(window.map);
 
     document.getElementById('map-loading').style.display = 'none';
-
     renderMyRoutes();
     setupRegionButtons();
 }
 
 function renderMyRoutes() {
-    const data = window.ALL_ROUTES || window.GPX_ROUTES;
-    if (!data || !window.map) return;
-
+    const data = window.ALL_ROUTES;
+    if (!data) return;
     data.forEach(route => {
-        if (route && route.length > 0) {
-            L.polyline(route, {
-                color: '#7B1FA2',
-                weight: 2,
-                opacity: 0.4
-            }).addTo(window.map);
-        }
+        L.polyline(route, { color: '#0437F2', weight: 2, opacity: 0.5 }).addTo(window.map); // 轨迹也改为蓝色系
     });
 }
 
@@ -99,28 +83,24 @@ function setupRegionButtons() {
         if (btn) {
             btn.onclick = function(e) {
                 e.preventDefault();
-                const loc = LOCATIONS[config.key];
-                window.map.flyTo(loc.center, loc.zoom, { duration: 1.5 });
+                window.map.flyTo(LOCATIONS[config.key].center, LOCATIONS[config.key].zoom, { duration: 1.5 });
                 
-                // 切换样式：仅保留背景深浅变化，彻底移除白框
+                // 清除所有区域按钮的高亮，并确保无边框
                 btnConfigs.forEach(cfg => {
                     const b = document.getElementById(cfg.id);
                     if (b) {
-                        b.classList.remove('bg-purple-500/30', 'text-white');
-                        b.classList.add('bg-white/5', 'text-white/70');
-                        b.style.border = "none";
-                        b.style.outline = "none";
-                        b.style.boxShadow = "none";
+                        b.classList.remove('bg-white/30', 'text-white');
+                        b.classList.add('bg-white/5', 'text-white/80');
+                        b.style.outline = 'none'; // 强制移除
+                        b.style.border = 'none';  // 强制移除
                     }
                 });
-
-                btn.classList.add('bg-purple-500/30', 'text-white');
-                btn.classList.remove('bg-white/5', 'text-white/70');
+                // 高亮当前按钮
+                btn.classList.add('bg-white/30', 'text-white');
+                btn.classList.remove('bg-white/5', 'text-white/80');
             };
         }
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    window.switchTab('home');
-});
+document.addEventListener('DOMContentLoaded', () => { window.switchTab('home'); });
