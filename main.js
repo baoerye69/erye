@@ -1,9 +1,3 @@
-JavaScript
-/**
- * Haoran Wu's Website Main Logic
- * Final Tuning: Optimized zoom, precise coordinates & interactive UI
- */
-
 window.switchTab = function(tabId) {
     const sections = ['home-section', 'resume-section', 'cycling-section'];
     const buttons = ['btn-home', 'btn-resume', 'btn-cycling'];
@@ -43,12 +37,11 @@ window.switchTab = function(tabId) {
     }
 }
 
-// 优化后的坐标与缩放倍率
 const LOCATIONS = {
     'all': { center: [41.8, -72.5], zoom: 7.2 },
-    'boston': { center: [42.3601, -71.0589], zoom: 10 },
-    'liverpool': { center: [53.4084, -2.9916], zoom: 10 },
-    'suzhou': { center: [31.19899, 120.61026], zoom: 12.5 } // 精准定位石湖区域
+    'boston': { center: [42.3601, -71.0589], zoom: 9.5 },
+    'liverpool': { center: [53.4084, -2.9916], zoom: 9.5 },
+    'suzhou': { center: [31.19899, 120.61026], zoom: 12.5 } // 精准定位到你要求的坐标
 };
 
 window.map = null;
@@ -62,7 +55,6 @@ function initGPXMap() {
         attributionControl: false
     }).setView(LOCATIONS.all.center, LOCATIONS.all.zoom);
 
-    // 使用简洁的浅色底图
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(window.map);
 
     document.getElementById('map-loading').style.display = 'none';
@@ -74,8 +66,7 @@ function renderMyRoutes() {
     const data = window.ALL_ROUTES;
     if (!data) return;
     data.forEach(route => {
-        // 使用专业的热力紫色，搭配 0.4 透明度产生叠加质感
-        L.polyline(route, { color: '#7B1FA2', weight: 2, opacity: 0.4 }).addTo(window.map);
+        L.polyline(route, { color: '#0437F2', weight: 2, opacity: 0.5 }).addTo(window.map); // 轨迹也改为蓝色系
     });
 }
 
@@ -92,32 +83,24 @@ function setupRegionButtons() {
         if (btn) {
             btn.onclick = function(e) {
                 e.preventDefault();
+                window.map.flyTo(LOCATIONS[config.key].center, LOCATIONS[config.key].zoom, { duration: 1.5 });
                 
-                // 丝滑飞越到指定区域
-                window.map.flyTo(LOCATIONS[config.key].center, LOCATIONS[config.key].zoom, {
-                    duration: 1.5,
-                    easeLinearity: 0.25
-                });
-                
-                // 动态切换高亮状态：让选中的按钮“撑满”变亮
+                // 清除所有区域按钮的高亮，并确保无边框
                 btnConfigs.forEach(cfg => {
-                    const targetBtn = document.getElementById(cfg.id);
-                    if (targetBtn) {
-                        targetBtn.classList.remove('bg-white/30', 'text-white', 'scale-[1.02]', 'shadow-lg');
-                        targetBtn.classList.add('bg-white/5', 'text-white/80');
-                        targetBtn.style.outline = 'none';
-                        targetBtn.style.border = 'none';
+                    const b = document.getElementById(cfg.id);
+                    if (b) {
+                        b.classList.remove('bg-white/30', 'text-white');
+                        b.classList.add('bg-white/5', 'text-white/80');
+                        b.style.outline = 'none'; // 强制移除
+                        b.style.border = 'none';  // 强制移除
                     }
                 });
-
-                // 高亮当前选中的区域按钮
-                btn.classList.add('bg-white/30', 'text-white', 'scale-[1.02]', 'shadow-lg');
+                // 高亮当前按钮
+                btn.classList.add('bg-white/30', 'text-white');
                 btn.classList.remove('bg-white/5', 'text-white/80');
             };
         }
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => { 
-    window.switchTab('home'); 
-});
+document.addEventListener('DOMContentLoaded', () => { window.switchTab('home'); });
