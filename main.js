@@ -68,18 +68,30 @@ function initGPXMap() {
 }
 
 function renderMyRoutes() {
-    // 检查是否存在轨迹数据变量 (ALL_ROUTES 是你在 gpx-data.js 中定义的)
-    const routes = window.ALL_ROUTES || window.GPX_ROUTES;
+    const routes = window.ALL_ROUTES;
     if (!routes || !window.map) return;
 
-    // 渲染简单的热力图或路径
+    // 清除旧图层
+    if (window.routeLayers) {
+        window.routeLayers.forEach(layer => window.map.removeLayer(layer));
+    }
+    window.routeLayers = [];
+
+    // 批量渲染所有路径
     routes.forEach(route => {
-        L.polyline(route, {
-            color: '#9C27B0',
-            weight: 3,
-            opacity: 0.6
+        const polyline = L.polyline(route, {
+            color: '#7B1FA2', // 使用深紫色，更有专业热力图的感觉
+            weight: 2,        // 路径多时，线细一点更好看
+            opacity: 0.4,     // 叠加在一起会形成热力效果
+            smoothFactor: 1
         }).addTo(window.map);
+        window.routeLayers.push(polyline);
     });
+
+    // 自动缩放到所有路径的中心
+    if (window.GPX_BOUNDS) {
+        window.map.setView(window.GPX_BOUNDS.center, 12);
+    }
 }
 
 // 3. 页面加载完成后初始化
