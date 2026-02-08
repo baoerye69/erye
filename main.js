@@ -85,16 +85,19 @@ function setupRegionButtons() {
                 e.preventDefault();
                 window.map.flyTo(LOCATIONS[config.key].center, LOCATIONS[config.key].zoom, { duration: 1.5 });
                 
-                // 切换 class 实现美观的高亮效果
+                // 清除所有区域按钮的高亮，并确保无边框
                 btnConfigs.forEach(cfg => {
                     const b = document.getElementById(cfg.id);
                     if (b) {
-                        b.classList.remove('active-region');
-                        b.classList.add('inactive-region');
+                        b.classList.remove('bg-white/30', 'text-white');
+                        b.classList.add('bg-white/5', 'text-white/80');
+                        b.style.outline = 'none'; // 强制移除
+                        b.style.border = 'none';  // 强制移除
                     }
                 });
-                btn.classList.add('active-region');
-                btn.classList.remove('inactive-region');
+                // 高亮当前按钮
+                btn.classList.add('bg-white/30', 'text-white');
+                btn.classList.remove('bg-white/5', 'text-white/80');
             };
         }
     });
