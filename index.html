@@ -10,18 +10,41 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="./gpx-data.js"></script>
     <style>
-        /* 网站主色调改为 #0437F2 */
-        body { background-color: #0437F2 !important; }
+        /* 网站主色调修改为 #AD5E4E */
+        body { 
+            background-color: #AD5E4E !important; 
+            margin: 0;
+            padding: 0;
+        }
+        
         .hidden-section { display: none !important; }
-        /* 彻底干掉点击时的白色框框 (Focus Outline) */
-        button:focus, button:active {
+
+        /* 彻底移除所有按钮点击时的白色边框和聚焦框 */
+        button {
+            outline: none !important;
+            -webkit-tap-highlight-color: transparent;
+            border: none !important;
+        }
+        
+        button:focus, button:active, button:focus-visible {
             outline: none !important;
             box-shadow: none !important;
+            border: none !important;
         }
-        #gpx-heatmap { background: #032dbd; } /* 地图底色稍微深一点点 */
+
+        /* 优化地图容器背景，使其与主色调融合 */
+        #gpx-heatmap { 
+            background: #944d3f; 
+        }
+
+        /* 自定义滚动条样式 (可选，增加精致感) */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
     </style>
 </head>
 <body class="text-white/90 antialiased selection:bg-white/30 selection:text-white min-h-screen flex justify-center p-4 md:p-12 lg:p-20">
+
     <div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12 relative">
         <aside class="lg:col-span-4 lg:sticky lg:top-20 lg:h-[calc(100vh-10rem)] flex flex-col justify-between">
             <div class="space-y-8">
@@ -31,25 +54,28 @@
                         <img src="Portrait.JPG" alt="Haoran Wu" class="absolute inset-1 w-[calc(100%-8px)] h-[calc(100%-8px)] object-cover rounded-full">
                     </div>
                 </div>
+
                 <div class="space-y-2">
                     <h1 class="text-4xl md:text-5xl font-medium tracking-tight text-white">Haoran Wu</h1>
                     <p class="text-lg text-white/80 font-light tracking-wide">PhD Student & Researcher</p>
                 </div>
+
                 <nav class="flex flex-col space-y-2 w-full max-w-xs">
-                    <button onclick="window.switchTab('home')" id="btn-home" class="group flex items-center justify-between px-4 py-3 rounded-lg bg-white/20 border border-white/10 text-left transition-all">
+                    <button onclick="window.switchTab('home')" id="btn-home" class="group flex items-center justify-between px-4 py-3 rounded-lg bg-white/20 text-left transition-all border-none">
                         <span class="text-sm font-medium tracking-wide">About & Research</span>
                         <iconify-icon icon="solar:home-smile-linear" width="20"></iconify-icon>
                     </button>
-                    <button onclick="window.switchTab('resume')" id="btn-resume" class="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-white/10 text-left transition-all text-white/70">
+                    <button onclick="window.switchTab('resume')" id="btn-resume" class="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-white/10 text-left transition-all text-white/70 border-none">
                         <span class="text-sm font-medium tracking-wide">Curriculum Vitae</span>
                         <iconify-icon icon="solar:document-text-linear" width="20"></iconify-icon>
                     </button>
-                    <button onclick="window.switchTab('cycling')" id="btn-cycling" class="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-white/10 text-left transition-all text-white/70">
+                    <button onclick="window.switchTab('cycling')" id="btn-cycling" class="group flex items-center justify-between px-4 py-3 rounded-lg hover:bg-white/10 text-left transition-all text-white/70 border-none">
                         <span class="text-sm font-medium tracking-wide">What Else</span>
                         <iconify-icon icon="solar:route-linear" width="20"></iconify-icon>
                     </button>
                 </nav>
             </div>
+
             <div class="mt-8 lg:mt-0 pt-8 border-t border-white/20 space-y-3">
                 <div class="flex items-center gap-3 text-sm text-white/70">
                     <iconify-icon icon="solar:map-point-linear" width="18"></iconify-icon>
@@ -83,10 +109,10 @@
                         <div class="bg-white/10 rounded-xl p-4 border border-white/10" id="region-buttons">
                             <h3 class="text-[10px] font-semibold text-white/50 mb-3 uppercase tracking-widest">Regions</h3>
                             <div class="flex flex-col gap-2">
-                                <button id="region-all" class="text-left px-3 py-2 rounded bg-white/20 text-white text-xs transition-colors">All (East Coast)</button>
-                                <button id="region-us" class="text-left px-3 py-2 rounded bg-white/5 text-white/80 text-xs hover:bg-white/20 transition-colors">Boston (US)</button>
-                                <button id="region-uk" class="text-left px-3 py-2 rounded bg-white/5 text-white/80 text-xs hover:bg-white/20 transition-colors">Liverpool (UK)</button>
-                                <button id="region-asia" class="text-left px-3 py-2 rounded bg-white/5 text-white/80 text-xs hover:bg-white/20 transition-colors">Suzhou (China)</button>
+                                <button id="region-all" class="text-left px-3 py-2 rounded bg-white/20 text-white text-xs transition-colors border-none outline-none">All (East Coast)</button>
+                                <button id="region-us" class="text-left px-3 py-2 rounded bg-white/5 text-white/80 text-xs hover:bg-white/20 transition-colors border-none outline-none">Boston (US)</button>
+                                <button id="region-uk" class="text-left px-3 py-2 rounded bg-white/5 text-white/80 text-xs hover:bg-white/20 transition-colors border-none outline-none">Liverpool (UK)</button>
+                                <button id="region-asia" class="text-left px-3 py-2 rounded bg-white/5 text-white/80 text-xs hover:bg-white/20 transition-colors border-none outline-none">Suzhou (China)</button>
                             </div>
                         </div>
                     </div>
@@ -100,6 +126,7 @@
             </div>
         </main>
     </div>
+
     <script src="./main.js"></script>
 </body>
 </html>
