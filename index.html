@@ -74,26 +74,42 @@
             <div id="cycling-section" class="hidden-section space-y-8 pb-20">
                 <h2 class="text-2xl font-medium text-white border-b border-white/10 pb-4">Cycling & Exploration</h2>
                 
-                <div class="flex flex-col lg:flex-row gap-6">
-                    <div class="w-full lg:w-56 flex-shrink-0">
-                        <div class="bg-white/10 rounded-2xl p-5 border border-white/10" id="region-buttons">
-                            <h3 class="text-[10px] font-semibold text-white/40 mb-4 uppercase tracking-widest">Regions</h3>
-                            <div class="grid grid-cols-2 lg:flex lg:flex-col gap-2.5">
-                                <button id="region-all" class="text-left px-4 py-3 rounded-xl bg-white/20 text-white text-xs">All</button>
-                                <button id="region-us" class="text-left px-4 py-3 rounded-xl bg-white/5 text-white/70 text-xs">Boston</button>
-                                <button id="region-uk" class="text-left px-4 py-3 rounded-xl bg-white/5 text-white/70 text-xs">Liverpool</button>
-                                <button id="region-asia" class="text-left px-4 py-3 rounded-xl bg-white/5 text-white/70 text-xs">Suzhou</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-1 relative rounded-2xl overflow-hidden border border-white/10 bg-black/20 shadow-2xl">
-                        <div id="gpx-heatmap"></div>
-                        <div id="map-loading" class="absolute inset-0 flex items-center justify-center bg-black/40 z-50">
-                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                        </div>
-                    </div>
-                </div>
+               <div class="flex flex-col lg:flex-row gap-8">
+    <div class="w-full lg:w-64 flex-shrink-0">
+        <div class="bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/10 shadow-xl">
+            <h3 class="text-[12px] font-bold text-white/40 mb-5 uppercase tracking-[0.2em] pl-1">Regions</h3>
+            
+            <div class="grid grid-cols-2 lg:flex lg:flex-col gap-3">
+                <button id="region-all" class="region-btn active-region px-4 py-4 rounded-2xl text-sm font-semibold transition-all duration-300 text-center lg:text-left">
+                    All (East Coast)
+                </button>
+                <button id="region-us" class="region-btn inactive-region px-4 py-4 rounded-2xl text-sm font-semibold transition-all duration-300 text-center lg:text-left">
+                    Boston (US)
+                </button>
+                <button id="region-uk" class="region-btn inactive-region px-4 py-4 rounded-2xl text-sm font-semibold transition-all duration-300 text-center lg:text-left">
+                    Liverpool (UK)
+                </button>
+                <button id="region-asia" class="region-btn inactive-region px-4 py-4 rounded-2xl text-sm font-semibold transition-all duration-300 text-center lg:text-left">
+                    Suzhou (China)
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex-1 relative rounded-[2.5rem] overflow-hidden border border-white/10 bg-black/20 shadow-2xl">
+        <div id="gpx-heatmap"></div>
+        <div id="map-loading" class="absolute inset-0 flex items-center justify-center bg-black/40 z-50">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .region-btn { border: none !important; outline: none !important; }
+    .active-region { background-color: rgba(255, 255, 255, 0.25); color: white; transform: scale(1.02); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .inactive-region { background-color: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.7); }
+    .inactive-region:hover { background-color: rgba(255, 255, 255, 0.12); color: white; }
+</style>
             </div>
         </main>
     </div>
