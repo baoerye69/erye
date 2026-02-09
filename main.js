@@ -70,6 +70,7 @@ function renderMyRoutes() {
     });
 }
 
+// 修改 main.js 中的高亮逻辑，以适应新的自适应布局
 function setupRegionButtons() {
     const btnConfigs = [
         { id: 'region-all', key: 'all' },
@@ -83,21 +84,19 @@ function setupRegionButtons() {
         if (btn) {
             btn.onclick = function(e) {
                 e.preventDefault();
-                window.map.flyTo(LOCATIONS[config.key].center, LOCATIONS[config.key].zoom, { duration: 1.5 });
+                window.map.flyTo(LOCATIONS[config.key].center, LOCATIONS[config.key].zoom);
                 
-                // 清除所有区域按钮的高亮，并确保无边框
+                // 移除所有按钮的选中色 (bg-white/20)，恢复默认色 (bg-white/5)
                 btnConfigs.forEach(cfg => {
                     const b = document.getElementById(cfg.id);
                     if (b) {
-                        b.classList.remove('bg-white/30', 'text-white');
-                        b.classList.add('bg-white/5', 'text-white/80');
-                        b.style.outline = 'none'; // 强制移除
-                        b.style.border = 'none';  // 强制移除
+                        b.classList.remove('bg-white/20');
+                        b.classList.add('bg-white/5');
                     }
                 });
-                // 高亮当前按钮
-                btn.classList.add('bg-white/30', 'text-white');
-                btn.classList.remove('bg-white/5', 'text-white/80');
+                // 给当前点击的加亮
+                btn.classList.add('bg-white/20');
+                btn.classList.remove('bg-white/5');
             };
         }
     });
